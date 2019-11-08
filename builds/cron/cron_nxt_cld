@@ -1,0 +1,6 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+*/5 * * * * bash /opt/nextcloud-sync-cron.sh /etc/nextcloud_client.conf >/dev/null 2>&1
+#empty line

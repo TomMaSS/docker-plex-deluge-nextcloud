@@ -1,0 +1,5 @@
+local: your_directory_to_store_sync_files
+remote: https://nextcloud.your.site
+username: your_user
+exclude_file: /opt/nextcl-sync-exclude.lst
+password: user_password

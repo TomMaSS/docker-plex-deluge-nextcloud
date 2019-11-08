@@ -1,0 +1,80 @@
+---
+
+version: '3'
+
+services:
+    plex:
+      image: linuxserver/plex:latest
+      container_name: plex
+      network_mode: host
+      environment:
+         PUID: 1000
+         PGID: 1000
+         VERSION: docker
+      volumes:
+        - "${PLEX_DIR}/library:/config"
+        - "${MEDIA_DIR}/tvseries:/media/tvshows"
+        - "${MEDIA_DIR}/movies:/media/movies"
+        - "${MEDIA_DIR}/music:/media/music"
+        - "${PLEX_DIR}/transcoding:/transcode"
+      ports:
+        - 32400:32400
+        - 32400:32400/udp
+        - 32469:32469
+        - 32469:32469/udp
+        - 5353:5353/udp
+        - 1900:1900/udp
+      restart: always
+
+    deluge:
+      image: linuxserver/deluge
+      container_name: deluge
+      network_mode: host
+      restart: always
+      volumes:
+        - "${DELUGE_WATCH_DIR}:/watch"
+        - "${DELUGE_DIR}/config:/config"
+        - "${MEDIA_DIR}/downloads:/downloads"
+        - "${MEDIA_DIR}:/media"
+      ports:
+         - "8112:8112"
+         - "58846:58846"
+         - "58847:58847"
+         - "58847:58847/udp"
+      environment:
+         PUID: 1000
+         PGID: 1000
+         TZ: Kiev/Europe
+         UMASK_SET: 022
+
+    plexpy:
+      image: linuxserver/plexpy
+      container_name: plexpy
+      restart: always
+      network_mode: host
+      ports:
+         - 8181:8181
+      volumes:
+         - "${PLEXPY_DIR}:/config"
+         - "${PLEX_DIR}/library/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+      environment:
+         PUID: 1000
+         PGID: 1000
+         TZ: Kiev/Europe
+
+    nextcloud_cron_client:
+      container_name: nextcloud_cron_client
+      build:
+        dockerfile: Dockerfile
+        context: ./builds/cron/
+      image: cronsync_nextcloud:latest
+      network_mode: host
+      volumes:
+        - "./builds/cron/myncs.conf:/etc/nextcloud_client.conf"
+        - "./builds/cron/sync-exclude.lst:/opt/nextcl-sync-exclude.lst"
+        - "/home/artem/nextcloud:/home/nextcloud"
+      restart: always
+      environment:
+         PUID: 1000
+         PGID: 1000
+         TZ: Kiev/Europe
