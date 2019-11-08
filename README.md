@@ -1,11 +1,11 @@
-#This is the simple  way to build you personal  nas media based on PlexTV server
+###This is the simple  way to build you personal  nas media based on PlexTV server
 
 ******
 ## Install
 **Note what you need installed docker and docker-compose on your host**
 
 1. Clone repository
-   `git clone `
+   `git clone https://github.com/TomMaSS/docker-plex-deluge-nextcloud.git`
 
 2. Rename .env_example
 `    mv .env_example .env`
@@ -15,6 +15,7 @@
 
 4. Edit ./builds/cron/myncs and .env with your personal variables and paths
 
+********
 ###.env
 
 | Variable  | Value  |
